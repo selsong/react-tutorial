@@ -11,7 +11,7 @@ function Square({value, onSquareClick}) {
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(null);
   const [movesCount, setMovesCount] = useState(0);
 
   function handleClick(i){
@@ -25,6 +25,7 @@ export default function Board() {
     // for (let i = 0; i < nextSquares.length; i++) {
     //   console.log(`Square ${i}: ${nextSquares[i]}`);
     // }
+    console.log(newMovesCount);
     if (newMovesCount > 6){ //enter chorus lapilli
       console.log("enter chorus lapilli");
          // Handle first click to select
@@ -41,13 +42,6 @@ export default function Board() {
         return;
       }
       else{
-        //if center square occupied, must move center
-        // if (squares[4] === currentSym){
-        //   if (i !== 4){
-        //     console.log("Must select center square");
-        //     return;
-        //   }
-        // }
         setSelected(i); // Store the index of the selected square
         console.log(`Selected index: ${i}, value: ${squares[i]}`);
       }
@@ -56,6 +50,7 @@ export default function Board() {
       // Handle second click to move
       //if you occupy center
       if (squares[4] === currentSym){
+        console.log(selected, i);
         if (!checkCenterMove(selected, i, currentSym, squares)){
           console.log("Center occupied. Must win or vacate center.");
           setSelected(null);
@@ -70,16 +65,19 @@ export default function Board() {
         setXIsNext(!xIsNext); // Switch turns
         setMovesCount(newMovesCount); // Increment move count
         setSelected(null); // Reset the selection for next turn
-    
       } else {
         console.log("Invalid move: Must move to an empty, adjacent square.");
         setSelected(null); // Reset the selection if the move is invalid
-    
+        return;
       }
     }
     }
     //otherwise operate as normal
     else{
+      if (squares[i]){
+        console.log("before chorus lapilli can't go onto occupied square");
+        return;
+      }
       if (xIsNext) {
         nextSquares[i] = 'X';
       } else {
